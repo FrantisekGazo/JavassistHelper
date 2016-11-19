@@ -1,0 +1,89 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        // publish plugin for bintray
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    if (!['JavassistHelper', 'app'].contains(project.name)) {
+
+        println " --> $project.name "
+
+        group = LIB_GROUP_ID
+        version = LIB_VERSION
+
+        apply plugin: 'java'
+        apply plugin: 'maven'
+        apply plugin: 'maven-publish'
+        apply plugin: 'com.jfrog.bintray'
+
+        /* Prevents sporadic compilation error:
+        * 'Bad service configuration file, or exception thrown while constructing
+        *  Processor object: javax.annotation.processing.Processor: Error reading
+        *  configuration file'
+        *
+        * See https://discuss.gradle.org/t/gradle-not-compiles-with-solder-tooling-jar/7583/20
+        */
+        tasks.withType(JavaCompile) { options.fork = true }
+
+        File privateProperties = rootProject.file('private.properties')
+        if (privateProperties.exists()) {
+            ext.priv = parseConfig(privateProperties)
+
+            task srcJar(type: Jar) {
+                from sourceSets.main.allJava
+                classifier "sources"
+            }
+
+            task docJar(type: Jar) {
+                classifier "javadoc"
+            }
+
+            artifacts {
+                archives srcJar
+                archives docJar
+            }
+
+            bintray {
+                dryRun false
+
+                user = priv.BINTRAY_USER
+                key = priv.BINTRAY_KEY
+
+                configurations = ['archives']
+
+                pkg {
+                    repo = LIB_REPO_NAME
+                    name = LIB_PACKAGE_NAME
+                    licenses = LIB_LICENSES
+                    vcsUrl = LIB_GIT_URL
+
+                    version {
+                        name = LIB_VERSION
+                        desc = LIB_VERSION_DESC
+                    }
+                }
+            }
+        }
+    }
+}
+
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
+    }
+}

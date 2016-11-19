@@ -1,0 +1,16 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+    /* needed to create a plugin */
+    compile gradleApi()
+    compile localGroovy()
+
+    /* Gradle plugin */
+    compile 'com.android.tools.build:gradle:1.5.0'
+    /* Javassist */
+    compile 'org.javassist:javassist:3.20.0-GA'
+}
