@@ -55,6 +55,6 @@ public final class Utils {
     }
 
     private static void internalLog(String msg, boolean newLine, Object... args) {
-        System.out.printf(msg + (newLine ? "\n" : ""), args);
+        //System.out.printf(msg + (newLine ? "\n" : ""), args);
     }
 }

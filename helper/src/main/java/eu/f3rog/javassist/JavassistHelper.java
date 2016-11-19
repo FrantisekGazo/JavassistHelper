@@ -31,10 +31,8 @@ public final class JavassistHelper {
 
     public void editMethod(ExprEditor editor, CtClass targetClass, String targetMethodName, CtClass... targetMethodParams)
             throws CannotCompileException, AfterBurnerImpossibleException, NotFoundException {
-        Utils.lognl("modify method : " + targetMethodName);
         CtMethod targetMethod = extractExistingMethod(targetClass, targetMethodName, targetMethodParams);
 
-        Utils.lognl("Method : " + targetMethod);
         if (targetMethod != null) {
             targetMethod.instrument(editor);
         } else {
@@ -51,13 +49,11 @@ public final class JavassistHelper {
      */
     public void addOrInsertMethod(InsertableMethod insertableMethod)
             throws CannotCompileException, AfterBurnerImpossibleException {
-        Utils.lognl("InsertableMethod : " + insertableMethod);
         CtClass classToTransform = insertableMethod.getClassToInsertInto();
         String targetMethodName = insertableMethod.getTargetMethodName();
         CtClass[] targetMethodParams = insertableMethod.getTargetMethodParams();
         CtMethod targetMethod = extractExistingMethod(classToTransform, targetMethodName, targetMethodParams);
 
-        Utils.lognl("Method : " + targetMethod);
         if (targetMethod != null) {
             InsertableMethodInjectorEditor injectorEditor = new InsertableMethodInjectorEditor(classToTransform, insertableMethod);
             injectorEditor.edit(targetMethod);
@@ -136,7 +132,7 @@ public final class JavassistHelper {
     public void insertConstructor(InsertableConstructor insertableConstructor)
             throws CannotCompileException, AfterBurnerImpossibleException, NotFoundException {
         List<CtConstructor> constructorList = extractExistingConstructors(insertableConstructor);
-        Utils.lognl("constructor count: " + constructorList.size());
+        Utils.lognl("existing constructor count: " + constructorList.size());
 
         if (constructorList.isEmpty()) {
             throw new AfterBurnerImpossibleException("No suitable constructor was found in class " + insertableConstructor.getClassToInsertInto().getName() + ". Add a constructor that is accepted by the InsertableConstructor. Don't use non static inner classes.");
