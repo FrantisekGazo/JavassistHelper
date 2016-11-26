@@ -13,7 +13,6 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
-import javassist.expr.ExprEditor;
 
 /**
  * Allows to modify byte code of java classes via javassist.
@@ -29,12 +28,12 @@ public final class JavassistHelper {
         mSignatureExtractor = new CtMethodJavaWriter();
     }
 
-    public void editMethod(ExprEditor editor, CtClass targetClass, String targetMethodName, CtClass... targetMethodParams)
+    public void editMethod(MethodEditor editor, CtClass targetClass, String targetMethodName, CtClass... targetMethodParams)
             throws CannotCompileException, AfterBurnerImpossibleException, NotFoundException {
         CtMethod targetMethod = extractExistingMethod(targetClass, targetMethodName, targetMethodParams);
 
         if (targetMethod != null) {
-            targetMethod.instrument(editor);
+            editor.instrument(targetMethod);
         } else {
             throw new IllegalStateException("Method " + targetMethodName + " was not fund inside " + targetClass);
         }
