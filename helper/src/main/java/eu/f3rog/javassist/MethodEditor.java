@@ -9,7 +9,7 @@ import javassist.expr.ExprEditor;
  */
 public abstract class MethodEditor extends ExprEditor {
 
-    void instrument(CtMethod method) throws CannotCompileException {
+    public void instrument(CtMethod method) throws CannotCompileException {
         method.instrument(this);
     }
 }
