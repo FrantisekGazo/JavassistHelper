@@ -39,6 +39,17 @@ public final class JavassistHelper {
         }
     }
 
+    public void renameMethod(CtClass targetClass, String targetMethodName, String newMethodName, CtClass... targetMethodParams)
+            throws CannotCompileException, AfterBurnerImpossibleException, NotFoundException {
+        CtMethod targetMethod = extractExistingMethod(targetClass, targetMethodName, targetMethodParams);
+
+        if (targetMethod != null) {
+            targetMethod.setName(newMethodName);
+        } else {
+            throw new IllegalStateException("Method " + targetMethodName + " was not fund inside " + targetClass);
+        }
+    }
+
     /**
      * Add/Inserts java instructions into a given method of a given class.
      *
