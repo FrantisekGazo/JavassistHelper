@@ -24,21 +24,22 @@ public final class Utils {
         return overriddenMethod;
     }
 
-    public static boolean equalArrays(CtClass[] a, CtClass[] a2) {
-        if (a == a2) { // checks for same array reference
+    public static boolean equalArrays(CtClass[] lhs, CtClass[] rhs) {
+        if (lhs == rhs) { // checks for same array reference
             return true;
         }
-        if (a == null || a2 == null) { // checks for null arrays
+
+        if (lhs == null || rhs == null) { // checks for null arrays
             return false;
         }
 
-        final int length = a.length;
-        if (a2.length != length) { // arrays should be of equal length
+        final int length = lhs.length;
+        if (rhs.length != length) { // arrays should be of equal length
             return false;
         }
 
         for (int i = 0; i < length; i++) { // compare array values
-            if (!a[i].equals(a2[i])) {
+            if (!lhs[i].equals(rhs[i])) {
                 return false;
             }
         }
